@@ -7,10 +7,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
@@ -34,61 +30,29 @@ import java.util.*;
 @EnableAutoConfiguration
 public class RefTrakkerMain implements CommandLineRunner {
 
-    /** Directory to store user credentials for this application. */
-    private static final java.io.File DATA_STORE_DIR = new java.io.File(
-            ".credentials");
-
-    /** Global instance of the {@link FileDataStoreFactory}. */
-    private static FileDataStoreFactory DATA_STORE_FACTORY;
-
-    /** Global instance of the JSON factory. */
-    private static final JsonFactory JSON_FACTORY =
-            GsonFactory.getDefaultInstance();
-    /** Global instance of the HTTP transport. */
-    private static HttpTransport HTTP_TRANSPORT;
-
-    /** Global instance of the scopes required by this quickstart.
-     *
-     * If modifying these scopes, delete your previously saved credentials
-     * at ~/.credentials/sheets.googleapis.com-java-quickstart
-     */
-    private static final List<String> SCOPES =
-            Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
-
-    static {
-        try {
-            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    private static Credential authorize() throws IOException {
+    private Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
                 RefTrakkerMain.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+                GoogleClientSecrets.load(appConfig.getJsonFactory(), new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow =
                 new GoogleAuthorizationCodeFlow.Builder(
-                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                        .setDataStoreFactory(DATA_STORE_FACTORY)
+                        appConfig.getHttpTransport(), appConfig.getJsonFactory(), clientSecrets, appConfig.getScopes())
+                        .setDataStoreFactory(appConfig.getDataStoreFactory())
                         .setAccessType("offline")
                         .build();
         Credential credential = new AuthorizationCodeInstalledApp(
                 flow, new LocalServerReceiver()).authorize("user");
-        System.out.println(
-                "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+
         return credential;
     }
 
      private Sheets getSheetsService() throws IOException {
         Credential credential = authorize();
-        return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+        return new Sheets.Builder(appConfig.getHttpTransport(), appConfig.getJsonFactory(), credential)
                 .setApplicationName(appConfig.getName())
                 .build();
     }
@@ -118,23 +82,6 @@ public class RefTrakkerMain implements CommandLineRunner {
 
         SpringApplication app = new SpringApplication(RefTrakkerMain.class);
         app.run();
-  /**
-
-
-        range = "Schedule!A55:E81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!H55:L81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!O55:S81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!V55:Z81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AC55:AG81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AJ55:AN81";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AQ55:AU81";
-        printRange(range,spreadsheetId,service);*/
     }
 
     private static void printRange(String range, String spreadSheetId, Sheets service) throws IOException, ParseException {
