@@ -12,7 +12,19 @@ mainClassName = 'org.hoss.RefTrakkerMain'
 
 targetCompatibility = 14
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main'
+        }
 
+    }
+    test {
+        java {
+            srcDir 'src/test' 
+        }
+    }
+}
 repositories {
     mavenCentral()
 }

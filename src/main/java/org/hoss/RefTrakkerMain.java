@@ -21,17 +21,18 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.hoss.config.ApplicationConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.*;
 
 @SpringBootApplication
-public class RefTrakkerMain {
-
-    /** Application name. */
-    private static final String APPLICATION_NAME =
-            "RefTrakker";
+@EnableAutoConfiguration
+public class RefTrakkerMain implements CommandLineRunner {
 
     /** Directory to store user credentials for this application. */
     private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -85,54 +86,40 @@ public class RefTrakkerMain {
         return credential;
     }
 
-     private static Sheets getSheetsService() throws IOException {
+     private Sheets getSheetsService() throws IOException {
         Credential credential = authorize();
         return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName(appConfig.getName())
                 .build();
     }
+    @Autowired
+    private ApplicationConfig appConfig;
 
+
+    public void run(String ... args) throws Exception {
+        System.out.println("******** "+appConfig.getName());
+        System.out.println("******** "+appConfig.getSheetId());
+        Sheets service = getSheetsService();
+            
+        for (String data: appConfig.getWeek1()) {
+            System.out.println("---"+data+"---");
+            printRange(data,appConfig.getSheetId(),service);
+        }
+        for (String data: appConfig.getWeek2()) {
+            System.out.println("---"+data+"---");
+            printRange(data,appConfig.getSheetId(),service);
+        }
+        for (String data: appConfig.getWeek3()) {
+            System.out.println("---"+data+"---");
+            printRange(data,appConfig.getSheetId(),service);
+        }
+    }
     public static void main(String[] args) throws IOException, ParseException {
 
-        SpringApplication.run(RefTrakkerMain.class, args);
+        SpringApplication app = new SpringApplication(RefTrakkerMain.class);
+        app.run();
+  /**
 
-        // Build a new authorized API client service.
-        Sheets service = getSheetsService();
-
-        // Prints the names and majors of students in a sample spreadsheet:
-        // https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-        //https://docs.google.com/spreadsheets/d/10f4E_6B9NBZglLAVaSPqsz--z0jNcZ3ltCOIPwB7EEI/edit?ts=5a4ec4cd#gid=0
-        String spreadsheetId = "10f4E_6B9NBZglLAVaSPqsz--z0jNcZ3ltCOIPwB7EEI";
-        String range = "Schedule!A1:E27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!H1:L27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!O1:S27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!V1:Z27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AC1:AG27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AJ1:AN27";
-        printRange(range,spreadsheetId,service);
-        range = "Schedule!AQ1:AU27";
-        printRange(range,spreadsheetId,service);
-
-
-range = "Schedule!A28:E54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!H28:L54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!O28:S54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!V28:Z54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!AC28:AG54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!AJ28:AN54";
- printRange(range,spreadsheetId,service);
- range = "Schedule!AQ28:AU54";
- printRange(range,spreadsheetId,service);
 
         range = "Schedule!A55:E81";
         printRange(range,spreadsheetId,service);
@@ -147,7 +134,7 @@ range = "Schedule!A28:E54";
         range = "Schedule!AJ55:AN81";
         printRange(range,spreadsheetId,service);
         range = "Schedule!AQ55:AU81";
-        printRange(range,spreadsheetId,service);
+        printRange(range,spreadsheetId,service);*/
     }
 
     private static void printRange(String range, String spreadSheetId, Sheets service) throws IOException, ParseException {
