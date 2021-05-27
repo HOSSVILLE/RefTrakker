@@ -4,13 +4,13 @@ plugins {
     id 'java'
     id 'application'
 }
+
+apply plugin: 'java'
+
 group = 'org.hoss'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 14
 
 mainClassName = 'org.hoss.RefTrakkerMain'
-
-targetCompatibility = 14
 
 sourceSets {
     main {
@@ -42,10 +42,10 @@ task fatJar(type: Jar) {
 
 
 dependencies {
-    compile 'com.google.api-client:google-api-client:1.31.3'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
-    compile 'com.google.apis:google-api-services-sheets:v4-rev20210223-1.31.0'
-    compile 'com.google.api-client:google-api-client-jackson2:1.31.3'
+    implementation 'com.google.api-client:google-api-client:1.31.5'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev20210223-1.31.0'
+    implementation 'com.google.api-client:google-api-client-jackson2:1.31.5'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
    // implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
