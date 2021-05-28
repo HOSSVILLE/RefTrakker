@@ -15,13 +15,19 @@ public class SpringJdbcConfig {
     @Value("${SPRING_DATASOURCE_USERNAME}")
     private String jdbcUsername;
 
+    @Value("${SPRING_DATASOURCE_PASSWORD}")
+    private String jdbcPassword;
+
+    @Value("${SPRING_DATASOURCE_URL}")
+    private String jdbcUrl;
+
     @Bean
     public DataSource pgsqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://ec2-3-214-136-47.compute-1.amazonaws.com/dfvge3198d0ojl");
+        dataSource.setUrl(this.jdbcUrl);
         dataSource.setUsername(this.jdbcUsername);
-        dataSource.setPassword("fc8125b38a49dd3bc13db5f6c519ed141703f7163003a926235b9576545b4d06");
+        dataSource.setPassword(this.jdbcPassword);
         return dataSource;
     }
 
