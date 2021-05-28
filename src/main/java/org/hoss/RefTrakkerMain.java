@@ -9,9 +9,7 @@ import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -30,8 +28,12 @@ public class RefTrakkerMain implements CommandLineRunner {
 
      private Credential authorize() throws IOException {
         // Load client secrets.
-        InputStream in =
-                RefTrakkerMain.class.getResourceAsStream("/app/google-credentials.json");
+         File file = new File("/app/google-credentials.json");
+         if (!file.exists()) {
+             throw new FileNotFoundException("Google Credentials not able to be found.");
+         }
+        InputStream in = new FileInputStream(file));
+
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(appConfig.getJsonFactory(), new InputStreamReader(in));
 
