@@ -22,7 +22,8 @@ public class ReadSheetController {
     }
 
     @GetMapping("/api/sheet/{week}")
-    public String getSheetByWeek(@PathVariable(name = "week")final String week) {
+    public String getSheetByWeek(@PathVariable final String week) {
+        System.out.println("----> Path Variable "+ week);
         try {
             refereeSheetService.getSheetDataByWeek(Integer.getInteger(week));
         } catch (Exception e) {
