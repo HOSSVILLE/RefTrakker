@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties
 public class ApplicationConfig {
 
-    private java.io.File dataStoreDir = new java.io.File(".credentials");
+    private java.io.File dataStoreDir = new java.io.File("tokens");
     private FileDataStoreFactory dataStoreFactory;
     private List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
     private JsonFactory jsonFactory = GsonFactory.getDefaultInstance();

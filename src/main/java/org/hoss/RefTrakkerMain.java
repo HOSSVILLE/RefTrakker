@@ -44,9 +44,10 @@ public class RefTrakkerMain implements CommandLineRunner {
                         .setDataStoreFactory(appConfig.getDataStoreFactory())
                         .setAccessType("offline")
                         .build();
-        Credential credential = new AuthorizationCodeInstalledApp(
-                flow, new LocalServerReceiver()).authorize("user");
-
+        //Credential credential = new AuthorizationCodeInstalledApp(
+         //       flow, new LocalServerReceiver()).authorize("user");
+         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+         Credential credential =new AuthorizationCodeInstalledApp(flow,receiver).authorize("user");
         return credential;
     }
 
