@@ -25,7 +25,7 @@ public class ReadSheetController {
     public String getSheetByWeek(@PathVariable final String week) {
         System.out.println("----> Path Variable "+ week);
         try {
-            refereeSheetService.getSheetDataByWeek(Integer.getInteger(week));
+            refereeSheetService.getSheetDataByWeek(Integer.parseInt(week));
         } catch (Exception e) {
             e.printStackTrace();
         }
