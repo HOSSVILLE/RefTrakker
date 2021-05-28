@@ -1,5 +1,6 @@
 package org.hoss.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +12,15 @@ import javax.sql.DataSource;
 @Configuration
 public class SpringJdbcConfig {
 
+    @Value("${SPRING_DATASOURCE_USERNAME}")
+    private String jdbcUsername;
+
     @Bean
     public DataSource pgsqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl("jdbc:postgresql://ec2-3-214-136-47.compute-1.amazonaws.com/dfvge3198d0ojl");
-        dataSource.setUsername("nxieynoygcixtk");
+        dataSource.setUsername(this.jdbcUsername);
         dataSource.setPassword("fc8125b38a49dd3bc13db5f6c519ed141703f7163003a926235b9576545b4d06");
         return dataSource;
     }
@@ -25,4 +29,6 @@ public class SpringJdbcConfig {
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
+
+    public String getJdbcUsername() {return this.jdbcUsername;}
 }
