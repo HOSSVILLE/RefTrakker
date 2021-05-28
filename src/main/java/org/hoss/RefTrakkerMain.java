@@ -1,23 +1,9 @@
 package org.hoss;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.testing.auth.oauth2.MockGoogleCredential;
-import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
-
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import com.google.api.services.sheets.v4.model.ValueRange;
 import org.hoss.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -25,7 +11,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -38,34 +30,36 @@ public class RefTrakkerMain implements CommandLineRunner {
         return credential;
     }
 
-     private Sheets getSheetsService() throws IOException {
+    private Sheets getSheetsService() throws IOException {
         Credential credential = authorize();
         return new Sheets.Builder(appConfig.getHttpTransport(), appConfig.getJsonFactory(), credential)
                 .setApplicationName(appConfig.getName())
                 .build();
     }
+
     @Autowired
     private ApplicationConfig appConfig;
 
 
-    public void run(String ... args) throws Exception {
-        System.out.println("******** "+appConfig.getName());
-        System.out.println("******** "+appConfig.getSheetId());
+    public void run(String... args) throws Exception {
+        System.out.println("******** " + appConfig.getName());
+        System.out.println("******** " + appConfig.getSheetId());
         Sheets service = getSheetsService();
-            
-        for (String data: appConfig.getWeek1()) {
-            System.out.println("---"+data+"---");
-            printRange(data,appConfig.getSheetId(),service);
+
+        for (String data : appConfig.getWeek1()) {
+            System.out.println("---" + data + "---");
+            printRange(data, appConfig.getSheetId(), service);
         }
-        for (String data: appConfig.getWeek2()) {
-            System.out.println("---"+data+"---");
-            printRange(data,appConfig.getSheetId(),service);
+        for (String data : appConfig.getWeek2()) {
+            System.out.println("---" + data + "---");
+            printRange(data, appConfig.getSheetId(), service);
         }
-        for (String data: appConfig.getWeek3()) {
-            System.out.println("---"+data+"---");
-            printRange(data,appConfig.getSheetId(),service);
+        for (String data : appConfig.getWeek3()) {
+            System.out.println("---" + data + "---");
+            printRange(data, appConfig.getSheetId(), service);
         }
     }
+
     public static void main(String[] args) throws IOException, ParseException {
 
         SpringApplication app = new SpringApplication(RefTrakkerMain.class);
@@ -78,7 +72,7 @@ public class RefTrakkerMain implements CommandLineRunner {
                 .execute();
         List<List<Object>> values = response.getValues();
 
-         SimpleDateFormat sFormatter = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat sFormatter = new SimpleDateFormat("MMM dd, yyyy");
         if (values == null || values.size() == 0) {
             System.out.println("No data found.");
         } else {
@@ -95,10 +89,10 @@ public class RefTrakkerMain implements CommandLineRunner {
                 } else if (row.size() == 3 &&
                         (((String) row.get(2)).startsWith("Expected") || ((String) row.get(2)).endsWith("Coed Playoffs") || ((String) row.get(2)).contains("Mens Playoffs"))) {
                     System.out.printf("%s\tNo Ref\t%s\n", row.get(0), row.get(2));
-                } else if (row.size() == 3 && ((String)row.get(2)).contains("Coed")) {
+                } else if (row.size() == 3 && ((String) row.get(2)).contains("Coed")) {
                     System.out.printf("%s\tNo Ref\t%s\n", row.get(0), row.get(2));
-                }else if (row.size() == 3 &&  ((String)row.get(2)).contains(" v ")) {
-                    System.out.printf("%s\tNo Ref\t%s\n",row.get(0),row.get(2));
+                } else if (row.size() == 3 && ((String) row.get(2)).contains(" v ")) {
+                    System.out.printf("%s\tNo Ref\t%s\n", row.get(0), row.get(2));
                 }
 
             }
