@@ -31,7 +31,7 @@ public class RefTrakkerMain implements CommandLineRunner {
     private Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                RefTrakkerMain.class.getResourceAsStream("/client_secret.json");
+                RefTrakkerMain.class.getResourceAsStream("/google-credentials.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(appConfig.getJsonFactory(), new InputStreamReader(in));
 
