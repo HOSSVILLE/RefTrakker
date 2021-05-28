@@ -4,6 +4,8 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.hoss.RefTrakkerMain;
 import org.hoss.config.ApplicationConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class RefereeSheetService {
+    private final Logger logger = LoggerFactory.getLogger(RefereeSheetService.class);
+
     private ApplicationConfig appConfig;
     private GoogleSheetsService googleSheetsService;
 
@@ -24,8 +28,8 @@ public class RefereeSheetService {
     }
 
     public void getSheetData() throws Exception {
-        System.out.println("******** " + appConfig.getName());
-        System.out.println("******** " + appConfig.getSheetId());
+        logger.info("******** Name {}", appConfig.getName());
+        logger.info("******** SheetId {} ", appConfig.getSheetId());
         Sheets service = googleSheetsService.getSheetsService();
 
         for (String data : appConfig.getWeek1()) {
@@ -40,6 +44,28 @@ public class RefereeSheetService {
             System.out.println("---" + data + "---");
             printRange(data, appConfig.getSheetId(), service);
         }
+    }
+        public void getSheetDataByWeek(final int week) throws Exception {
+            Sheets service = googleSheetsService.getSheetsService();
+
+            if (week == 1) {
+                for (String data : appConfig.getWeek1()) {
+                    System.out.println("---" + data + "---");
+                    printRange(data, appConfig.getSheetId(), service);
+                }
+            }
+            if (week == 2) {
+                for (String data : appConfig.getWeek2()) {
+                    System.out.println("---" + data + "---");
+                    printRange(data, appConfig.getSheetId(), service);
+                }
+            }
+            if (week == 3) {
+                for (String data : appConfig.getWeek3()) {
+                    System.out.println("---" + data + "---");
+                    printRange(data, appConfig.getSheetId(), service);
+                }
+            }
     }
 
     private void printRange(String range, String spreadSheetId, Sheets service) throws IOException, ParseException {
