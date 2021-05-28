@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20210223-1.31.0'
     implementation 'com.google.api-client:google-api-client-jackson2:1.31.5'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-   // implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
