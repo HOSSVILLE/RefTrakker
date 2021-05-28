@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties
 public class ApplicationConfig {
 
-    private java.io.File dataStoreDir = new java.io.File("tokens");
+    private java.io.File dataStoreDir = new java.io.File(".credentials");
     private FileDataStoreFactory dataStoreFactory;
     private List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
     private JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -39,6 +39,9 @@ public class ApplicationConfig {
             ex.printStackTrace();
         }
     }
+
+    @Value("${GOOGLE_CREDENTIALS}")
+    private String googleCredentials;
 
     @Value("${org.hoss.spreadsheet.id}")
     private String sheetId;
@@ -99,6 +102,10 @@ public class ApplicationConfig {
     }
     public void setSheetId(final String val) {
         this.sheetId = val;
+    }
+
+    public String getGoogleCredential() {
+        return googleCredentials;
     }
     
 }

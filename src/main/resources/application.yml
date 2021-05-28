@@ -7,3 +7,5 @@ org:
     week1: Schedule!A1:E27,Schedule!H1:L27,Schedule!O1:S27,Schedule!V1:Z27,Schedule!AC1:AG27,Schedule!AJ1:AN27,Schedule!AQ1:AU27
     week2: Schedule!A28:E54,Schedule!H28:L54,Schedule!O28:S54,Schedule!V28:Z54,Schedule!AC28:AG54,Schedule!AJ28:AN54,Schedule!AQ28:AU54
     week3: Schedule!A55:E81,Schedule!H55:L81,Schedule!O55:S81,Schedule!V55:Z81,Schedule!AC55:AG81,Schedule!AJ55:AN81,Schedule!AQ55:AU81
+
+    api_key: AIzaSyB5PCCQaSiY7GNqt7wg75kJ7qZtapUIPoI

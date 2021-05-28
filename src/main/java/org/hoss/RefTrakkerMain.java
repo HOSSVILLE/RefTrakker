@@ -5,11 +5,16 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.testing.auth.oauth2.MockGoogleCredential;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -26,28 +31,10 @@ import java.util.*;
 @EnableAutoConfiguration
 public class RefTrakkerMain implements CommandLineRunner {
 
-     private Credential authorize() throws IOException {
-        // Load client secrets.
-         File file = new File("/app/google-credentials.json");
-         if (!file.exists()) {
-             throw new FileNotFoundException("Google Credentials not able to be found.");
-         }
-        InputStream in = new FileInputStream(file);
+    private Credential authorize() throws IOException {
+        InputStream in = new ByteArrayInputStream(appConfig.getGoogleCredential().getBytes());
 
-        GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(appConfig.getJsonFactory(), new InputStreamReader(in));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        appConfig.getHttpTransport(), appConfig.getJsonFactory(), clientSecrets, appConfig.getScopes())
-                        .setDataStoreFactory(appConfig.getDataStoreFactory())
-                        .setAccessType("offline")
-                        .build();
-        //Credential credential = new AuthorizationCodeInstalledApp(
-         //       flow, new LocalServerReceiver()).authorize("user");
-         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-         Credential credential =new AuthorizationCodeInstalledApp(flow,receiver).authorize("user");
+        GoogleCredential credential = GoogleCredential.fromStream(in).createScoped(appConfig.getScopes());
         return credential;
     }
 
