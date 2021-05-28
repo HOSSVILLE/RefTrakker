@@ -32,7 +32,7 @@ public class RefTrakkerMain implements CommandLineRunner {
          if (!file.exists()) {
              throw new FileNotFoundException("Google Credentials not able to be found.");
          }
-        InputStream in = new FileInputStream(file));
+        InputStream in = new FileInputStream(file);
 
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(appConfig.getJsonFactory(), new InputStreamReader(in));
